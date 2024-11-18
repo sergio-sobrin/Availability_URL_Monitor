@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 
-# Função para criar a pasta de configuração e log em /etc/aum/
+# Criar a pasta de configuração e log em /etc/aum/
 def create_config_files():
     config_dir = '/etc/aum'
     os.makedirs(config_dir, exist_ok=True)
@@ -17,14 +17,14 @@ def create_config_files():
     log_file = f"{config_dir}/url_monitoring.log"
     if not os.path.exists(log_file):
         with open(log_file, 'w') as f:
-            pass  # Cria o arquivo vazio
+            pass  
 
     # Configurar permissões para o diretório e arquivos
     os.chmod(config_dir, 0o777)  # Permissões para o diretório /etc/aum
     os.chmod(f"{config_dir}/webhooks.conf", 0o666)  # Permissões para o arquivo webhooks.conf
     os.chmod(f"{config_dir}/url_monitoring.log", 0o666)  # Permissões para o arquivo de log
 
-# Função para configurar o serviço systemd
+# Configurar o serviço systemd
 def setup_systemd_service():
     service_file = 'aum_monitor/systemd/aum-monitor.service'
     target_path = '/etc/systemd/system/aum-monitor.service'
@@ -47,7 +47,7 @@ def setup_systemd_service():
         print(f"Error setting up systemd service: {e}")
         raise
 
-# Classe de instalação personalizada para executar o script pós-instalação
+# Classe para executar o script pós-instalação
 class CustomInstallCommand(install):
     def run(self):
         install.run(self)  # Executa o processo padrão de instalação
@@ -55,18 +55,23 @@ class CustomInstallCommand(install):
         setup_systemd_service()  # Configura o serviço systemd
 
 # Configuração do setup.py
+from setuptools import setup, find_packages
+
 setup(
     name='aum',
     version='1.0.0',
     packages=find_packages(),
     install_requires=[
-        # Dependências aqui (ex: 'requests', 'pyfiglet', etc.)
+        'requests',     
+        'pyfiglet',     
+        'colorama',     
+        'rich',         
     ],
     entry_points={
         'console_scripts': [
-            'aum=aum.aum:main',  # Permite rodar o programa com o comando 'aum'
-            'aum-daemon=aum.daemon:main',  # Configura o comando 'aum-daemon'
-        ]
+            'aum=aum.aum:main',          
+            'aum-daemon=aum.daemon:main' # Permite rodar o daemon com o comando 'aum-daemon'
+        ],
     },
     data_files=[
         ('/etc/aum', ['config/webhooks.conf']),  # Inclui o arquivo de configuração no build

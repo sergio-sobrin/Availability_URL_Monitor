@@ -6,14 +6,14 @@ from .monitor import run_single_monitoring
 url_file = "/etc/aum/urls.json"
 webhook_file = "/etc/aum/webhooks.conf"
 
-# Função para carregar URLs do arquivo JSON
+# Carregar URLs do arquivo .json
 def load_urls():
     if os.path.exists(url_file):
         with open(url_file, "r") as file:
             return json.load(file)
     return []
 
-# Função para salvar URLs no arquivo JSON
+# Salvar URLs no arquivo .json
 def save_urls(urls):
     with open(url_file, "w") as file:
         json.dump(urls, file, indent=4)
@@ -24,7 +24,7 @@ def ensure_https(url):
         return "https://" + url
     return url
 
-# Função para carregar webhooks de um arquivo de configuração no formato [alias]\nurl = <url>
+# Carregar webhooks de um arquivo de configuração no formato [alias] \n url = <url>
 def load_webhooks():
     webhooks = {}
     if os.path.exists(webhook_file):
@@ -39,16 +39,16 @@ def load_webhooks():
                     alias = None  # Reset para próximo alias
     return webhooks
 
-# Função para salvar um novo webhook no arquivo de configuração no formato [alias]\nurl = <url>
+# Salvar um novo webhook no arquivo de configuração no formato [alias] \n url = <url>
 def save_webhook(alias, url):
     with open(webhook_file, "a") as file:
         file.write(f"\n[{alias}]\nurl = {url}\n")
 
-# Função para rodar uma verificação única de monitoramento
+# Executar monitoramento único, atualizando a lista de URLs a cada execução
 def run_single_check():
     while True:
-        urls = load_urls()  # Carrega as URLs antes de chamar `run_single_monitoring`
-        run_single_monitoring(urls)  # Passa as URLs como argumento
+        urls = load_urls()
+        run_single_monitoring(urls)
 
         choice = input("Deseja rodar novamente (1) ou voltar ao menu (2)? ").strip()
         if choice == "2":
@@ -56,7 +56,7 @@ def run_single_check():
         elif choice != "1":
             print("Opção inválida. Tente novamente.")
 
-# Função para visualizar todas as URLs e seus aliases
+# Visualizar todas as URLs e seus aliases
 def view_urls():
     urls = load_urls()
     print("URLs monitoradas:")
@@ -66,7 +66,7 @@ def view_urls():
         else:
             print(f"Erro: entrada inválida encontrada no índice {i} - {entry}")
 
-# Função para adicionar URLs
+# Adicionar URLs
 def add_url():
     print("Escolha uma opção:")
     print("1. Adicionar uma nova URL manualmente")
@@ -85,7 +85,7 @@ def add_url():
         url = input("Digite a URL que deseja adicionar: ").strip()
         url = ensure_https(url.lower())
 
-        # Exibe os webhooks existentes e dá a opção de criar um novo
+        # Exibir os webhooks existentes e dar a opção de criar um novo
         if webhooks:
             print("Escolha um alias de webhook existente ou crie um novo:")
             for i, alias in enumerate(webhooks.keys(), 1):
@@ -165,8 +165,7 @@ def add_url():
     else:
         print("Opção inválida. Tente novamente.")
 
-# Função para editar uma URL existente
-# Função para editar uma URL existente
+# Editar uma URL existente
 def edit_url():
     urls = load_urls()
     if not urls:
@@ -192,7 +191,6 @@ def edit_url():
     try:
         original_index = int(index) - 1
         if 0 <= original_index < len(urls):
-            # Editar URL (se necessário)
             new_url = input("Digite a nova URL (ou pressione Enter para manter a atual): ").strip()
             if new_url:
                 urls[original_index]['url'] = ensure_https(new_url)
@@ -205,7 +203,7 @@ def edit_url():
             for i, alias in enumerate(webhooks.keys(), 1):
                 print(f"{i}. {alias} -> {webhooks[alias]}")
 
-            # Adicionar nova opção para inserir um novo webhook
+            # Opção de inserir um novo webhook
             print(f"{len(webhooks) + 1}. Criar um novo alias de webhook")
 
             webhook_choice = input(f"Digite o número da opção desejada (1-{len(webhooks) + 1}): ").strip()
@@ -232,7 +230,7 @@ def edit_url():
     except ValueError:
         print("Entrada inválida. Por favor, insira um número ou '0' para cancelar.")
 
-# Função para remover URLs
+# Remover URLs
 def remove_url():
     urls = load_urls()
     if not urls:
@@ -266,7 +264,7 @@ def remove_url():
     except ValueError:
         print("Entrada inválida. Por favor, insira um número ou '0' para cancelar.")
 
-# Função de menu principal
+# Menu principal
 def main():
     while True:
         print("\nMenu Principal")

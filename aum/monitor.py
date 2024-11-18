@@ -8,11 +8,9 @@ from threading import Thread
 from .logger import log_error, log_recovery
 from .webhook import load_webhooks, send_notification
 
-# Dicionário para rastrear o estado anterior das URLs
-status_anterior = {}
+status_anterior = {} # Dicionário para rastrear o estado anterior das URLs
 
-# Caminho absoluto para o arquivo JSON onde as URLs são armazenadas
-url_file = "/etc/aum/urls.json"
+url_file = "/etc/aum/urls.json" # Caminho absoluto para o arquivo .json onde as URLs são armazenadas
 
 # Carregar webhooks do arquivo de configuração
 webhooks = load_webhooks()
@@ -20,7 +18,7 @@ webhooks_carregados = bool(webhooks)
 if not webhooks_carregados:
     print("Nenhum webhook configurado. Notificações não serão enviadas.")
 
-# Função para carregar URLs do arquivo JSON
+# Carregar URLs do arquivo .json
 def load_urls():
     if os.path.exists(url_file):
         with open(url_file, "r") as file:
@@ -28,10 +26,10 @@ def load_urls():
             return [{"url": item['url'], "webhook": item.get('webhook')} for item in data if 'url' in item]
     return []
 
-# Função para verificar o status de uma URL
+# Verificar o status da URL
 def check_url_status(url):
     try:
-        response = requests.get(url, timeout=25)
+        response = requests.get(url, timeout=30)
         return response.status_code
     except requests.RequestException:
         return "timeout"
@@ -41,7 +39,7 @@ def formatar_tempo_inativo(segundos):
     minutos, segundos = divmod(resto, 60)
     return f"{horas}h {minutos}m {segundos}s"
 
-# Função para rodar o monitoramento de URLs continuamente
+# Executar o monitoramento de URLs continuamente
 def monitorar():
     numero_threads = 50
     intervalo = 60
@@ -94,7 +92,7 @@ def monitorar():
 
         time.sleep(intervalo)
 
-# Função para rodar uma verificação única de monitoramento
+# Roda uma verificação única de monitoramento
 def run_single_monitoring(urls):
     numero_threads = 50
     total_urls = len(urls)
@@ -115,7 +113,7 @@ def run_single_monitoring(urls):
                 error_count += 1
                 erros_por_tipo.setdefault(status, []).append(url)
 
-    # Exibindo o resumo
+    # Exibindo o resumo do monitoramento
     print("\n===== Resumo da Verificação Única =====")
     print(f"Total de URLs monitoradas: {total_urls}")
     print(f"URLs OK: {ok_count}")
@@ -127,7 +125,7 @@ def run_single_monitoring(urls):
             print(url)
     print("===================================\n")
 
-# Função para rodar o monitoramento contínuo em segundo plano
+# Execução do monitoramento contínuo em segundo plano
 def start_monitoring_thread():
     monitor_thread = Thread(target=monitorar)
     monitor_thread.daemon = True

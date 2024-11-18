@@ -1,3 +1,0 @@
-api-entrepay-dev.dopster.io
-api-pote.bsci-brazil.com/swagger/index.html
-api.middleware.entrepay.com.br/swagger-ui/index.html

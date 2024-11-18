@@ -60,17 +60,14 @@ def main_menu():
             print("Opção inválida. Tente novamente.")
 
 def main():
-    # Exibe a mensagem de boas-vindas com cor aleatória
+    
     print_welcome_message()
 
-    # Exibe o alerta de webhook, se necessário
-    print_webhook_alert()
+    print_webhook_alert() # Exibe o alerta de webhook, se necessário
 
-    # Inicia o monitoramento
     start_monitoring()
 
-    # Chama o menu principal
-    main_menu()
+    main_menu()   # Chama o menu principal
 
 if __name__ == "__main__":
     main()

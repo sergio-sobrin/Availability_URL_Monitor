@@ -1,8 +1,7 @@
-# webhook.py
 import requests
 import configparser
 
-# Função para carregar webhooks de um arquivo .conf
+# Carregar webhooks de um arquivo .conf
 import configparser
 
 def load_webhooks():
@@ -20,7 +19,7 @@ def load_webhooks():
     return webhooks
 
 
-# Função para enviar notificações para um webhook específico
+# Enviar notificações para um webhook específico
 def send_notification(webhook_name, message, webhooks):
     webhook_url = webhooks.get(webhook_name)
     if webhook_url:
