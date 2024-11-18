@@ -1,0 +1,14 @@
+[Unit]
+Description=AUM (Availability URLs Monitor)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/aum
+ExecStart=/root/aum/aum-daemon.sh
+Restart=always
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target
